@@ -1,0 +1,141 @@
+import random
+
+class Cooks(): #Работник ресторана - посетитель
+
+    def cooking_pie(self, pie):
+        pass
+
+
+class Pie(): #Конкретный пирог
+
+    def __init__(self, designation):
+        self.designation = designation #название пирога
+        self.dough = "не приготовлено"
+        self.filling = "не приготовлено"
+        self.fry = "не запекалось"
+        self.decision = "нет"
+
+    def __str__(self):
+        return (f"Пирог: {self.designation}\n" +
+            f"\t\tТесто приготовлено: {self.dough}\n" +
+            f"\t\tНачинка приготовлена: {self.filling}\n" +
+            f"\t\tЗапечено: {self.fry}\n" + f"\t\tРешение: {self.decision}")
+
+    def create_dough(self):
+        self.dough = random.choice(["правильно", "неправильно"])
+        print(f"\t\tТесто приготовлено: {self.dough}")
+
+    def create_filling(self):
+        self.filling = random.choice(["правильно", "неправильно"])
+        print(f"\t\tНачинка приготовлена: {self.filling}")
+
+    def process_fry(self):
+        self.fry = random.choice(["правильно", "неправильно"])
+        print(f"\t\tЗапечено: {self.fry}")
+
+    def verdict(self, cooks = Cooks):
+        print(f"\tПирог: {self.designation}")
+        cooks.cooking_pie(self)
+
+
+class Restaurant(): #Ресторан в котором проводиться проверка
+
+    def __init__(self, restaurant_num, pie_designations):
+        self.restaurant_num = restaurant_num
+        self.pies = []
+        for designation in pie_designations:
+            self.pies.append(Pie(designation))
+
+    def __str__(self):
+        result = f"Ресторан №{self.restaurant_num}\n"
+        for pie in self.pies:
+            result += "\t" + str(pie) + "\n"
+        return result[:-1]
+
+    def verdict(self, cooks=Cooks):
+        print(f"Ресторан №{self.restaurant_num}")
+        for pie in self.pies:
+            pie.verdict(cooks)
+
+
+class Trainee_cook(Cooks): #Повар-стажёр конкретный работник в ресторане
+
+    def cooking_pie(self, pie = Pie):
+        pie.create_dough()
+        pie.create_filling()
+        pie.process_fry()
+
+
+class Chef(Cooks): #Шеф-повар конкретный работник ресторана
+
+    def cooking_pie(self, pie = Pie):
+        if pie.dough == "правильно" and pie.filling == "правильно" and pie.fry == "правильно":
+            pie.decision = "Вкусно"
+        elif pie.dough == "неправильно" and pie.filling == "неправильно" and pie.fry == "неправильно":
+            pie.decision = "Невкусно"
+        elif pie.dough == "правильно" and pie.filling == "неправильно" and pie.fry == "правильно":
+            pie.decision = "Приемлимо"
+        elif pie.dough == "правильно" and pie.filling == "правильно" and pie.fry == "неправильно":
+            pie.decision = "Приемлимо"
+        elif pie.dough == "правильно" and pie.filling == "неправильно" and pie.fry == "неправильно":
+            pie.decision = "Невкусно"
+        elif pie.dough == "неправильно" and pie.filling == "неправильно" and pie.fry == "правильно":
+            pie.decision = "Невкусно"
+        elif pie.dough == "неправильно" and pie.filling == "правильно" and pie.fry == "неправильно":
+            pie.decision = "Невкусно"
+        elif pie.dough == "неправильно" and pie.filling == "правильно" and pie.fry == "правильно":
+            pie.decision = "Приемлимо"
+        else:
+            pie.decision = "неопределённо"
+        print(f"\t\tРешение: {pie.decision}")
+
+
+class Restaurant_Iterator(): #Итератор проходящий по списку ресторанов
+
+    def __init__(self, collection=[]):
+        self.collection = collection
+        self.pointer = 0
+
+    def current(self):
+        if self.pointer < len(self.collection):
+            return self.collection[self.pointer]
+
+    def next(self):
+        if len(self.collection) >= self.pointer + 1:
+            self.pointer += 1
+
+    def has_next(self):
+        has = len(self.collection) >= self.pointer + 1
+        if not has: self.pointer = 0
+        return has
+
+    def add(self, item):
+        self.collection.append(item)
+
+
+if __name__ == '__main__':
+    restaurant = Restaurant_Iterator()
+    restaurant.add(Restaurant(1, ["Мясной пирог", "Яблочный пирог"]))
+    restaurant.add(Restaurant(2, ["Мясной пирог", "Яблочный пирог"]))
+
+    print(" Начальные данные")
+    while restaurant.has_next():
+        print(str(restaurant.current()))
+        restaurant.next()
+
+    print("\n\n Приготовление пирогов поваром-стажёром")
+    trainee_cook = Trainee_cook()
+    while restaurant.has_next():
+        restaurant.current().verdict(trainee_cook)
+        restaurant.next()
+
+    print("\n\n Проверка пирогов шеф-поваром")
+    chef = Chef()
+    while restaurant.has_next():
+        restaurant.current().verdict(chef)
+        restaurant.next()
+
+    print("\n\n Конечный результат")
+    while restaurant.has_next():
+        print(str(restaurant.current()))
+        restaurant.next()
