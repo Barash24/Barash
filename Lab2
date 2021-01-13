@@ -1,0 +1,66 @@
+from abc import ABC, abstractmethod
+
+class AbstractClassPie(ABC):
+
+    def template_method(self) -> None:
+
+        self.step_1()
+        self.CreateDough()
+        self.step_2()
+        self.CreateFilling()
+        self.step_3()
+        self.Fry()
+
+    def step_1(self) -> None:
+        print("Первый шаг:")
+
+    def step_2(self) -> None:
+        print("Второй шаг:")
+
+    def step_3(self) -> None:
+        print("Третий шаг:")
+
+    def CreateDough(self) -> None:
+        pass
+
+    def CreateFilling(self) -> None:
+        pass
+
+    def Fry(self) -> None:
+        pass
+
+class ApplePie (AbstractClassPie):
+
+    def CreateDough(self) -> None:
+        print("Используем слоеное тесто.")
+
+    def CreateFilling(self) -> None:
+        print("Используем яблочную начинку.")
+
+    def Fry(self) -> None:
+        print("Запекаем в духовке при температуре 180 градусов в течении 30 минут.")
+
+
+class MeatPie(AbstractClassPie):
+
+    def CreateFilling(self) -> None:
+        print("Используем дрожжевое тесто.")
+
+    def CreateDough(self) -> None:
+        print("Используем мясную начинку.")
+
+    def Fry(self) -> None:
+        print("Запекаем в духовке при температуре 210 градусов в течении 50 минут.")
+def main(abstract_class: AbstractClassPie) -> None:
+
+    abstract_class.template_method()
+
+if __name__ == "__main__":
+
+    print("Приготовление яблочного пирога")
+    main(ApplePie())
+
+    print("")
+
+    print("Приготовление мясного пирога")
+    main(MeatPie())
