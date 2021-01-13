@@ -1,0 +1,131 @@
+class Storage_room():
+
+    def taking_seats(self):
+        pass
+    def taking_engine(self):
+        pass
+
+class Engine():
+
+    def __init__(self):
+        self.name = ''
+        self.hp = ''
+
+    def __str__(self):
+        return f'{self.name} ({self.hp})'
+
+class Toyota_e(Engine):
+
+    def __init__(self):
+        self.name = '1HD-FTE'
+        self.hp = '204 л.с.'
+
+class BMW_e(Engine):
+
+    def __init__(self):
+        self.name = 'B38'
+        self.hp = '231 л.с.'
+
+class Seats():
+
+    def __init__(self):
+        self.quantity = ''
+
+    def __str__(self):
+        return self.quantity
+
+class Toyota_s(Seats):
+
+    def __init__(self):
+        self.quantity = '2'
+
+class BMW_s(Seats):
+
+    def __init__(self):
+        self.quantity = '4'
+
+class Toyota_Storage_room(Storage_room):
+
+    def taking_engine(self):
+        return Toyota_e()
+
+    def taking_seats(self):
+        return Toyota_s()
+
+class BMW_Storage_room(Storage_room):
+    def taking_engine(self):
+        return BMW_e()
+
+    def taking_seats(self):
+        return BMW_s()
+
+class Car():
+
+    def __init__(self):
+        self.engine = ''
+        self.seats = ''
+        self.trip_computer = ''
+        self.gps = ''
+
+    def __str__(self):
+        return (
+            'Builded car:\n' +
+            f'\tEngine: {self.engine}\n' +
+            f'\tSeats: {self.seats}\n' +
+            f'\tTrip computer: {self.trip_computer}\n' +
+            f'\tGPS: {self.gps}'
+        )
+
+class Builder:
+
+    def build(self, storage_room):
+        self.car = Car()
+        self.storage_room = storage_room
+
+
+class Usual_complement(Builder):
+
+    def establish_engine(self):
+        self.car.engine = self.storage_room.taking_engine()
+
+    def establish_seats(self):
+        self.car.seats = self.storage_room.taking_seats()
+
+    def establish_trip_computer(self):
+        self.car.trip_computer = 'No'
+
+    def establish_gps(self):
+        self.car.gps = 'No'
+
+class Max_complement(Builder):
+
+    def establish_engine(self):
+        self.car.engine = self.storage_room.taking_engine()
+
+    def establish_seats(self):
+        self.car.seats = self.storage_room.taking_seats()
+
+    def establish_trip_computer(self):
+        self.car.trip_computer = 'Yes'
+
+    def establish_gps(self):
+        self.car.gps = 'Yes'
+
+class Factory:
+
+    def establish_complement_car(self, builder):
+        self.builder = builder
+
+    def build_car(self, storage_room):
+        self.builder.build(storage_room)
+        self.builder.establish_engine()
+        self.builder.establish_seats()
+        self.builder.establish_trip_computer()
+        self.builder.establish_gps()
+        return self.builder.car
+
+
+if __name__ == '__main__':
+    factory = Factory()
+    factory.establish_complement_car(Max_complement())
+    print(factory.build_car(Toyota_Storage_room()))
